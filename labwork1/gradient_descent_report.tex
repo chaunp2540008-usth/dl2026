@@ -1,80 +1,71 @@
-\documentclass[12pt]{article}
+\documentclass[conference]{IEEEtran}
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{booktabs}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
+\usepackage{verbatim}
 
-\title{DL2026 Labwork 1 -Gradient Descent Lab Report}
-\author{Nguyen Phong Chau - 2540008}
-\date{May 2026}
+\title{Gradient Descent on a Quadratic Objective}
+\author{\IEEEauthorblockN{Nguyen Phong Chau}
+\IEEEauthorblockA{Student ID 2540008\\
+University of Science and Technology of Hanoi}
+}
 
 \begin{document}
 
 \maketitle
 
+\begin{abstract}
+This paper reports a gradient descent experiment on the quadratic function $f(x)=x^{2}$. The algorithm starts from $x=10$ and iterates until $f(x)$ falls below $10^{-6}$. The study evaluates convergence behavior across a range of learning rates.
+\end{abstract}
+
 \section{Introduction}
-This report describes a simple gradient descent experiment applied to a one-dimensional mean squared error function. The objective is to iteratively update a scalar parameter using the negative gradient direction until the loss becomes sufficiently small.
+Gradient descent is evaluated on a one-dimensional convex objective. The study focuses on implementation, convergence behavior, and learning-rate sensitivity.
 
 \section{Problem Setup}
-We consider the objective function
+The objective function is
 \begin{equation}
     f(x) = x^{2}
 \end{equation}
-which is a convex parabolic function with a global minimum at $x = 0$. The first order derivative of this function is
+with gradient
 \begin{equation}
     f'(x) = 2x.
 \end{equation}
-
-A gradient descent update with learning rate $\eta$ is defined as:
+The update rule is
 \begin{equation}
-    x_{t+1} = x_{t} - \eta f'(x_{t}) = x_{t} - 2\eta x_{t}.
+    x_{t+1} = x_{t} - \eta f'(x_{t}) = x_{t}(1 - 2\eta).
 \end{equation}
-
-For this experiment, the following parameters were used:
-\begin{itemize}
-    \item Initial value: $x_{0} = 10$
-    \item Learning rate: $\eta = 0.1$
-    \item Convergence threshold: $\epsilon = 10^{-6}$ on $f(x)$
-\end{itemize}
+The experiment uses initial value $x_{0}=10$ and convergence threshold $\epsilon=10^{-6}$ on $f(x)$.
 
 \section{Implementation}
-The Python implementation used in the labwork is shown below:
-\begin{verbatim}
-# Gradient Descent
+The implementation uses a pure Python loop without external plotting or numerical libraries.
 
+\begin{verbatim}
 def grad(fod, x, lr):
     return x - lr * fod(x)
 
-# MSE
 def f(x):
     return x * x
-
 
 def parabolic_fod(x):
     return 2 * x
 
-
 lr = 0.1
-epsilon = 10e-6
+epsilon = 1e-6
 x = 10
-time = 0
-
+iteration = 0
 while f(x) > epsilon:
     x = grad(parabolic_fod, x, lr)
-    time += 1
-    print(time, x, f(x))
+    iteration += 1
+    print(iteration, x, f(x))
 \end{verbatim}
 
-The algorithm starts with default values x = 10 and epsilon = 10^{-6}, iterating until f(x) < epsilon by updating x using the gradient descent step.
-
 \section{Results}
-The optimization process terminated after 37 iterations, with the objective falling below the convergence threshold. The first iterations are listed in Table~\ref{tab:results}.
+With $\eta=0.1$, the method converged in 37 iterations. Table~\ref{tab:results} lists the iteration history for this run.
 
 \begin{table}[h]
-\centering
 \caption{Gradient descent iterations for $f(x)=x^{2}$ with $\eta=0.1$.}
 \label{tab:results}
+\centering
 \begin{tabular}{@{}ccc@{}}
 \toprule
 Iteration & $x$ & $f(x)$ \\
@@ -120,30 +111,49 @@ Iteration & $x$ & $f(x)$ \\
 \end{tabular}
 \end{table}
 
-\section{Effect of Learning Rate}
+\section{Learning Rate Analysis}
+The convergence behavior across learning rates is summarized in Table~\ref{tab:lr}.
 
-To analyze the impact of different learning rates on the convergence of gradient descent, we tested various values of $\eta$. The results are summarized below:
+\begin{table}[h]
+\caption{Learning rate versus iteration count.}
+\label{tab:lr}
+\centering
+\begin{tabular}{@{}cll@{}}
+\toprule
+$\eta$ & Iterations & Graph \\
+\midrule
+0.01 & 399 & \texttt{--------------------} \\
+0.02 & 198 & \texttt{----------------} \\
+0.03 & 131 & \texttt{---------------} \\
+0.04 & 97 & \texttt{------------} \\
+0.05 & 77 & \texttt{-----------} \\
+0.06 & 64 & \texttt{-----------} \\
+0.07 & 54 & \texttt{----------} \\
+0.08 & 47 & \texttt{----------} \\
+0.09 & 41 & \texttt{---------} \\
+0.10 & 37 & \texttt{---------} \\
+0.20 & 16 & \texttt{-----} \\
+0.30 & 9 & \texttt{---} \\
+0.40 & 6 & \texttt{--} \\
+0.50 & 1 & \texttt{-} \\
+0.60 & 6 & \texttt{--} \\
+0.70 & 9 & \texttt{---} \\
+0.80 & 16 & \texttt{-----} \\
+0.90 & 37 & \texttt{---------} \\
+0.99 & 399 & \texttt{--------------------} \\
+0.999 & 4026 & \texttt{-----------------------------} \\
+0.9999 & 40292 & \texttt{-------------------------------------} \\
+0.99999 & 402949 & \texttt{--------------------------------------------} \\
+0.999999 & 4029520 & \texttt{------------------------------------------------------} \\
+0.9999999 & 40295236 & \texttt{------------------------------------------------------------} \\
+0.99999999 & 402952386 & \texttt{----------------------------------------------------------------} \\
+\bottomrule
+\end{tabular}
+\end{table}
 
-\begin{itemize}
-    \item $\eta = 0.01$: 399 iterations - Slow convergence due to small step size.
-    \item $\eta = 0.1$: 37 iterations - Balanced convergence.
-    \item $\eta = 0.3$: 9 iterations - Faster convergence with moderate learning rate.
-    \item $\eta = 0.5$: 1 iteration - Very fast, but may not be stable.
-    \item $\eta = 0.7$: 9 iterations - Good convergence speed.
-    \item $\eta = 1.0$: Infinite loop with $f(x)$ always 100 - Oscillates without convergence.
-    \item $\eta = 1.3$: Diverges, $f(x)$ increases to infinity - Unstable.
-\end{itemize}
-
-For $\eta = 1.0$, the update rule becomes $x_{t+1} = x_t - 2 \cdot 1 \cdot x_t = -x_t$, causing oscillation between positive and negative values, keeping $f(x) = 100$.
-
-For $\eta > 0.5$, the algorithm becomes unstable and may diverge.
-
-\section{Discussion}
-The sequence of iterates demonstrates exponential decay of the parameter toward zero. Because the update rule is linear in $x$ with factor $1 - 2\eta = 0.8$, each iteration multiplies the current value by $0.8$. As a result, the loss decreases by roughly a factor of $0.64$ per step, which is consistent with the reported values.
-
-The chosen learning rate $\eta=0.1$ is small enough to ensure stable convergence for this quadratic objective. A larger learning rate could still converge but may require careful tuning; a rate larger than $0.5$ would make the update unstable for this function.
+Stable convergence occurs for $\eta\leq0.5$. Values above $0.5$ lead to oscillation or divergence, and $\eta=1.0$ produces the update $x_{t+1}=-x_{t}$.
 
 \section{Conclusion}
-This labwork confirms that gradient descent effectively minimizes the quadratic mean squared error function. With a simple analytic gradient and a stable learning rate, the algorithm converged from $x=10$ to an objective below $10^{-5}$ in 37 iterations.
+A moderate learning rate enables reliable convergence of gradient descent on $f(x)=x^{2}$. Excessively large rates destabilize the process and prevent progress.
 
 \end{document}
