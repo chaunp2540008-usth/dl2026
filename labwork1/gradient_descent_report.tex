@@ -4,7 +4,7 @@
 \usepackage{booktabs}
 \usepackage{verbatim}
 
-\title{Gradient Descent on a Quadratic Objective}
+\title{Labwork 1: Gradient Descent}
 \author{\IEEEauthorblockN{Nguyen Phong Chau}
 \IEEEauthorblockA{Student ID 2540008\\
 University of Science and Technology of Hanoi}
@@ -15,7 +15,7 @@ University of Science and Technology of Hanoi}
 \maketitle
 
 \begin{abstract}
-This paper reports a gradient descent experiment on the quadratic function $f(x)=x^{2}$. The algorithm starts from $x=10$ and iterates until $f(x)$ falls below $10^{-6}$. The study evaluates convergence behavior across a range of learning rates.
+This lab work reports a gradient descent experiment on the quadratic function $f(x)=x^{2}$. The algorithm starts from $x=10$ and iterates until $f(x)$ falls below $10^{-6}$. The study evaluates the convergence behaviour across a range of learning rates.
 \end{abstract}
 
 \section{Introduction}
@@ -151,9 +151,6 @@ $\eta$ & Iterations & Graph \\
 \end{tabular}
 \end{table}
 
-Stable convergence occurs for $\eta\leq0.5$. Values above $0.5$ lead to oscillation or divergence, and $\eta=1.0$ produces the update $x_{t+1}=-x_{t}$.
-
-\section{Conclusion}
-A moderate learning rate enables reliable convergence of gradient descent on $f(x)=x^{2}$. Excessively large rates destabilize the process and prevent progress.
+Stable convergence occurs for $\eta\leq0.5$. Values above $0.9$ lead to oscillation or divergence, and $\eta=1.0$ produces the update $x_{t+1}=-x_{t}$.
 
 \end{document}
