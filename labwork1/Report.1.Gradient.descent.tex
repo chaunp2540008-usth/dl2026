@@ -15,29 +15,11 @@ University of Science and Technology of Hanoi}
 \maketitle
 
 \begin{abstract}
-This lab work reports a gradient descent experiment on the quadratic function $f(x)=x^{2}$. The algorithm starts from $x=10$ and iterates until $f(x)$ falls below $10^{-6}$. The study evaluates the convergence behaviour across a range of learning rates.
+This lab work reports a gradient descent experiment on the function $f(x)=x^{2}$. The study evaluates the convergence behaviour across a range of learning rates.
 \end{abstract}
 
-\section{Introduction}
-Gradient descent is evaluated on a one-dimensional convex objective. The study focuses on implementation, convergence behavior, and learning-rate sensitivity.
-
-\section{Problem Setup}
-The objective function is
-\begin{equation}
-    f(x) = x^{2}
-\end{equation}
-with gradient
-\begin{equation}
-    f'(x) = 2x.
-\end{equation}
-The update rule is
-\begin{equation}
-    x_{t+1} = x_{t} - \eta f'(x_{t}) = x_{t}(1 - 2\eta).
-\end{equation}
-The experiment uses initial value $x_{0}=10$ and convergence threshold $\epsilon=10^{-6}$ on $f(x)$.
-
 \section{Implementation}
-The implementation uses a pure Python loop without external plotting or numerical libraries.
+The experiment uses initial value $x_{0}=10$ and convergence threshold $\epsilon=10^{-6}$ on $f(x)$.
 
 \begin{verbatim}
 def grad(fod, x, lr):
