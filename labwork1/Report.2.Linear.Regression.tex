@@ -67,4 +67,19 @@ The final regression line compare to the original data points is shown in Figure
     \caption{Convergence of weights and loss over iterations}
     \label{fig:convergence}
 \end{figure}
+
+\section{Discussion}
+
+Experimenting different learning rates revealed that $\eta=4 \times 10^{-4}$ provided the fastest convergence time. The training converges faster with larger learning rates, but the current algorithm caught an overflow error from $\eta>=5 \times 10^{-4}$.
+
+The relation between learning rate and convergence time is shown in the Figure~\ref{fig:lr_convergence}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{lr_convergence.png}
+    \caption{Convergence time for different learning rates}
+    \label{fig:lr_convergence}
+\end{figure}
+
+
 \end{document}
