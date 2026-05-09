@@ -1,0 +1,114 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{verbatim}
+\usepackage{graphicx}
+
+\title{Labwork 2: Logistic Regression}
+\author{\IEEEauthorblockN{Nguyen Phong Chau}
+\IEEEauthorblockA{Student ID 2540008\\
+University of Science and Technology of Hanoi}
+}
+
+\begin{document}
+
+\onecolumn
+
+\maketitle
+
+\begin{abstract}
+This lab work reports a logistic regression experiment using gradient descent on a dataset to recommend loan approvals. The study also evaluates the convergence behaviour and final model performance.
+\end{abstract}
+
+\section{Implementation}
+
+The experiment uses initial value $w=(0.0, -1.0, 1.0)$, learning rate $\eta=1 \times 10^{-4}$, and convergence threshold $\epsilon=10^{-6}$. The training loop iteratively updates the weights until the change in loss is less than $\epsilon$.
+
+The training algorithm is implemented as follows:
+
+\begin{verbatim}
+import math
+
+
+def predict(x, w) -> float:
+    x_with_bias = [1.0] + list(x)
+    return sum((w_i * x_i for w_i, x_i in zip(w, x_with_bias)))
+
+
+def sigmoid(z) -> float:
+    return 1 / (1 + math.exp(-z))
+
+
+def loss(x, y, w) -> float:
+    y_pred = [predict(x_i, w) for x_i in x]
+    return (
+        sum(
+            math.log(1 + math.exp(y_pred_i)) - y_i * y_pred_i
+            for y_i, y_pred_i in zip(y, y_pred)
+        )
+        / size
+    )
+
+
+def grad_descent(x, y, w, lr):
+    y_pred = [predict(x_i, w) for x_i in x]
+    x = [[1.0] + list(x_i) for x_i in x]
+    new_w = []
+    for j, w_j in enumerate(w):
+        w_j = w_j - (
+            lr
+            * sum(
+                x_i[j] * (1 - y_i - sigmoid(-y_pred_i)) for x_i, y_i, y_pred_i in zip(x, y, y_pred)
+            )
+            / size
+        )
+        new_w.append(w_j)
+    return new_w
+
+
+def training_loop(weight, lr, epsilon):
+    time = 0
+    current_loss = loss(x_train, y_train, weight)
+    # print("initial loss", current_loss)
+    delta = 10
+
+    while delta > epsilon:
+        weight = grad_descent(x_train, y_train, weight, lr)
+        new_loss = loss(x_train, y_train, weight)
+        delta = current_loss - new_loss
+        current_loss = new_loss
+        # print(time, weight, current_loss, delta)
+
+        time += 1
+    return time, weight, current_loss
+\end{verbatim}
+
+\section{Results}
+
+The model converged after $81638$ iterations, yielding a final weight of approximately $(-0.2353, 0.9585, -0.1156)$ and a final MSE loss of $0.4979$. 
+
+The final regression line compare to the original data points is shown in Figure~\ref{fig:convergence}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{output.png}
+    \caption{Compare model prediction with original data points}
+    \label{fig:convergence}
+\end{figure}
+
+\section{Discussion}
+
+Experimenting different learning rates revealed that $\eta=3 \times 10^{-4}$ provided the fastest convergence time. Convergence time increased faster in both directions when the learning rate was further increased or decreased from this optimal value.
+
+The relation between learning rate and convergence time is shown in the Figure~\ref{fig:lr_convergence}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=1\textwidth]{lr_convergence.png}
+    \caption{Convergence time for different learning rates}
+    \label{fig:lr_convergence}
+\end{figure}
+
+
+\end{document}
