@@ -1,6 +1,5 @@
-import math
+from typing import Any
 
-from activation import Sigmoid
 
 class NeuralNetwork:
     def __init__(self):
@@ -16,20 +15,19 @@ class NeuralNetwork:
 
     def backward(self, grad, lr):
         for layer in reversed(self.layers):
-            
             grad = layer.backward(grad, lr)
 
     def fit(self, X, y, epochs, lr, loss):
+        output_layer = self.layers[-1]
+
         for epoch in range(epochs):
             total_loss = 0.0
 
-            for xi, yi in zip(X, y):
+            for xi, yi in zip[tuple](X, y):
                 outputs = self.forward(xi)
-
                 total_loss += loss.forward(outputs, [yi])
 
-                grad = loss.derivative(outputs, [yi])
-                print("grad_loss:", grad)
+                grad = loss.derivative([output_layer.z[0]], [yi])
                 self.backward(grad, lr)
 
             if epoch % 1000 == 0:
@@ -37,14 +35,7 @@ class NeuralNetwork:
 
     def predict(self, X):
         preds = []
-
         for x in X:
-            z = self.forward(x)[0]
-
-            sigmoid = Sigmoid()
-
-            y = sigmoid.forward(z)
-
-            preds.append(1 if y > 0.5 else 0)
-
+            p = self.forward(x)[0]
+            preds.append(1 if p > 0.5 else 0)
         return preds

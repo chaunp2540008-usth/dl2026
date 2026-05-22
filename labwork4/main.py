@@ -4,17 +4,15 @@ from model import NeuralNetwork
 from loss import CrossEntropy
 
 X = [[0, 0], [0, 1], [1, 0], [1, 1]]
-
 y = [0, 1, 1, 0]
-
 
 model = NeuralNetwork()
 model.add(InputLayer())
 model.add(HiddenLayer(2, 2, Sigmoid()))
-model.add(OutputLayer(2, 1))
+model.add(OutputLayer(2, 1, Sigmoid()))
 
 loss = CrossEntropy()
-
-model.fit(X, y, epochs=1000, lr=1e-5, loss=loss)
+model.fit(X, y, epochs=5000, lr=0.5, loss=loss)
 
 print("Predictions:", model.predict(X))
+print("Expected:   ", y)
